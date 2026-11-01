@@ -51,6 +51,12 @@ class TestExpiringLocalCache(unittest.TestCase):
         time.sleep(12)
         self.assertIsNone(self.cache.get('key'))
 
+    def test_clear_removes_expired_keys(self):
+        self.cache.set('expired', 'value', -1)
+        self.cache.set('live', 'value', 60)
+        self.cache._clear()
+        self.assertEqual(self.cache.keys('*'), ['live'])
+
     def tearDown(self):
         del self.cache
 
